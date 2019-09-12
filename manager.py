@@ -4,6 +4,7 @@ import winsound
 import shutil
 from colorama import init, Fore, Style
 from libs.mp3 import *
+import libs.user_account
 
 # globals
 
@@ -316,6 +317,7 @@ def help():
         
 def main():
     print("\nLoading...\nSystem ready.")
+    os.chdir(anchor)
     getTime()
 
     while True:
@@ -401,4 +403,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+        if libs.user_account.setup():
+                main()
+        else:
+                if libs.user_account.setup():
+                        main()
+                else:
+                        sys.exit()
