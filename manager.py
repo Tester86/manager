@@ -360,6 +360,15 @@ def main():
 
         elif cmd == "lookup":
                 look_for_folders()
+        elif "rename" in cmd:
+                cmd_list = cmd.split()
+                try:
+                        old_name = cmd_list[1]
+                        new_name = cmd_list[3]
+                        os.rename(old_name, new_name)
+                        print(f"{old_name} is now called {new_name}")
+                except:
+                        print("Error, syntax: rename [old name] as [new name]")
         elif "start" in cmd:
                 start(cmd.split()[1])
         elif "open" in cmd:
