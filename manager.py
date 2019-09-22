@@ -5,6 +5,7 @@ import shutil
 from colorama import init, Fore, Style
 from libs.mp3 import *
 import libs.user_account
+import libs.cybersec as cybersec
 
 # globals
 
@@ -85,24 +86,25 @@ def new_folder(dirname):
         print(f"Error while creating folder: {dirname}")
 
 def rmmode(name):
-        if os.path.exists(name):
-                if os.path.isfile(name):
-                        try:
-                                os.remove(name)
-                                print(f"File removed: {name}")
-                        except:
-                                print(f"Error while trying to remove file: {name}")
+        for i in name:
+                if os.path.exists(i):
+                        if os.path.isfile(i):
+                                try:
+                                        os.remove(i)
+                                        print(f"File removed: {i}")
+                                except:
+                                        print(f"Error while trying to remove file: {i}")
+                        else:
+                                try:
+                                        shutil.rmtree(i, ignore_errors=True)
+                                        print(f"Directory removed: {i}")
+                                except:
+                                        print(f"Error while trying to remove directory: {i}")  
                 else:
-                        try:
-                                shutil.rmtree(name, ignore_errors=True)
-                                print(f"DIrectory removed: {name}")
-                        except:
-                                print(f"Error while trying to remove directory: {name}")  
-        else:
-                if os.path.isfile(name):
-                        print(f"This file does not exist: {name}")
-                else:
-                        print(f"This folder does not exist: {name}")
+                        if os.path.isfile(i):
+                                print(f"This file does not exist: {i}")
+                        else:
+                                print(f"This folder does not exist: {i}")
 
 def changedir(path):
         global anchor
@@ -290,13 +292,14 @@ def getTime():
 
 def help():
         help = """
-        cmd:         task:
+        cmd:                    task:
         
         help                    shows help menu
         shutdown                shuts down device
         mkfile                  creates a new file in current directory
         mkdir                   creates a new director in current directory
         rm                      removes an element from current directory
+        rename                  renames a file or folder
         ls                      shows all files and folders in current directory
         fls                     shows all files in current directory, excluding folders
         dir                     shows all directories in current directory, excluding files
@@ -308,11 +311,10 @@ def help():
         download                download a music file
         cmusic                  plays a song in the console
         music                   plays a song in Predetermined Media Player
+        scrap                   scrapping tool for websites              
         jimena                  asistenta virtual
         clear                   clears the screen
-        exit                    exit ROS
-        (*)github upload        upload file to github
-        (*)github remove        remove file from github\n"""
+        exit                    exit ROS\n"""
         print(help)
         
 def main():
@@ -337,10 +339,7 @@ def main():
                 except:
                         print("No file or directory name to remove provided")
         elif "remove" in cmd or "delete" in cmd:
-                try:
-                        rmmode(cmd.split()[1])
-                except:
-                        print("No file or directory name to remove provided")
+                rmmode(cmd.split()[1::])
         elif cmd == "ls":
                 ls()
         elif cmd == "fls":
@@ -392,14 +391,27 @@ def main():
                         print("Done")
                 finally:
                         adapt()
+        elif "scrap" in cmd:
+                try:
+                        if cmd.split()[1] == "-t" or cmd.split()[1] == "--text":
+                                try:
+                                        cybersec.getText(cmd.split()[2])
+                                except:
+                                        print("Error while getting text from website: " + cmd.split()[2])
+                        elif cmd.split()[1] == "-u" or cmd.split()[1] == "--url":
+                                try:
+                                        cybersec.getUrls(cmd.split()[2])
+                                except:
+                                        print("Error while getting urls from website: " + cmd.split()[2])
+                        elif cmd.split()[1] == "-h" or cmd.split()[1] == "--help":
+                                print("\nUsage: scrap [options] <website>")
+                                print("\nOptions:\n  -t, --text = get the text from a website\n  -u, --url = get the urls in a website's source code\n  -h, --help = display help for scrapping tool\n\n")
+                except:
+                        print("\nUsage: scrap [options] <website>")
+                        print("\nOptions:\n  -t, --text = get the text from a website\n  -u, --url = get the urls in a website's source code\n  -h, --help = display help for scrapping tool\n\n")
         elif "jimena" in cmd:
+                os.chdir(anchor)
                 os.system("start jimena.py")
-        elif cmd == "github upload":
-                # code plz
-               pass
-        elif cmd == "github remove":
-                # code plz
-                pass
         elif cmd == "clear":
                 os.system("clear || @cls")
         elif cmd == "exit": 
