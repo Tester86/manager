@@ -4,6 +4,7 @@ import time, datetime
 from libs.audio import *
 
 #globals
+
 contactos = {}
 gmail_user = ""
 gmail_password = ""
