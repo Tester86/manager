@@ -13,6 +13,38 @@ gmail_password = ""
 
 #auxiliary functions
 
+def extract_cmd(cmd, kw):
+    for i in cmd.split():
+        if kw in i:
+            juice = cmd.split()[cmd.split().index(i) + 1::]
+    try:
+        return " ".join(juice)
+    except:
+        return 0
+
+def anotate(string):
+    if not os.getcwd() == "C:\\Users\\Usuario\\Desktop\\ROS\\data":
+        os.chdir("C:\\Users\\Usuario\\Desktop\\ROS\\data")
+    if os.path.exists("notes.txt"):
+        f = open("notes.txt", "a")
+        f.write(string + "\n")
+        f.close()
+    else:
+        f = open("notes.txt", "w+")
+        f.write(string + "\n")
+        f.close()
+
+def show_anotations():
+    os.chdir("C:\\Users\\Usuario\\Desktop\\ROS\\data")
+    try:
+        f = open("notes.txt")
+        content = f.read()
+        all_notes = content.splitlines()
+        print("\n".join(all_notes))
+    except:
+        say("Señor, actualmente no tiene ninguna nota")
+        print("Sin notas")
+
 def jimena_help():
     helptext = "Puedo hacer gran variedad de cosas, señor. Entre ellas están administrar contactos, mandar correos electrónicos, darle la hora, llevar a cabo operaciones matemáticas... Usted solo pida"
     return helptext
@@ -245,6 +277,11 @@ def Jimena():
             operate(cmd)
         elif "llama" in cmd:
             makeCall()
+        elif "not" in cmd:
+            if "enseñ" in cmd or "muestr" in cmd or "mostr" in cmd:
+                show_anotations()
+            else:
+                anotate(extract_cmd(cmd, "not"))
         elif "adios" in cmd:
                 say("Hasta la próxima, señor")
                 time.sleep(1)
