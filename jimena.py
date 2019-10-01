@@ -24,7 +24,11 @@ def extract_cmd(cmd, kw):
 
 def anotate(string):
     if not os.getcwd() == "C:\\Users\\Usuario\\Desktop\\ROS\\data":
-        os.chdir("C:\\Users\\Usuario\\Desktop\\ROS\\data")
+        try:
+            os.chdir("C:\\Users\\Usuario\\Desktop\\ROS\\data")
+        except:
+            os.mkdir("C:\\Users\\Usuario\\Desktop\\ROS\\data")
+            os.chdir("C:\\Users\\Usuario\\Desktop\\ROS\\data")
     if os.path.exists("notes.txt"):
         f = open("notes.txt", "a")
         f.write(string + "\n")
